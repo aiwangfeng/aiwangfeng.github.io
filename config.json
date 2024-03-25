@@ -1,6 +1,9 @@
 {
-    "title":"Blog Title",
-    "subTitle":"Blog description",
-    "avatarUrl":"https://github.githubassets.com/favicons/favicon.svg",
+    "displayTitle":"BlackSheepWall",
+    "title":"BlackSheepWall",
+    "subTitle":"The two most important days in your life are the day you are born and the day you find out why.",
+    "homeUrl":"https://aiwangfeng.github.io",
+    "avatarUrl":"https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg",
+    "startSite":"3/25/2024",
     "GMEEK_VERSION":"last"
 }
