@@ -9,7 +9,90 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="automount NFS shares in macOS">
+<meta name="description" content="# The Read-only Root Filesystem
+
+```
+synthetic.conf – synthetic symbolic link and directory manifest
+```
+This file allows creating symbol links/empty directoreis under / which is mounted as read-only.
+
+# /etc/auto_master
+
+```
+#
+# Automounter master map
+#
++auto_master  # Use directory service
+#/net   -hosts  -nobrowse,hidefromfinder,nosuid
+/home   auto_home -nobrowse,hidefromfinder
+/Network/Servers -fstab
+/-   -static
+/-   auto_nfs -soft,nobrowse,nosuid
+```
+
+# /etc/auto_nfs
+
+```
+/System/Volumes/Data/DVD -fstype=nfs,soft,resvport,rw,noowners 192.168.1.10:/DVD
+/System/Volumes/Data/Bluray -fstype=nfs,soft,resvport,rw,noowners 192.168.1.10:/Bluray
+```
+
+# /etc/synthetic.conf
+
+```
+DVD^ISystem/Volumes/Data/DVD
+Bluray^ISystem/Volumes/Data/Bluray
+```
+
+# /etc/nfs.conf for the NFS server
+
+```
+nfs.client.mount.options = vers=4
+```。">
+<meta property="og:title" content="automount NFS shares in macOS">
+<meta property="og:description" content="# The Read-only Root Filesystem
+
+```
+synthetic.conf – synthetic symbolic link and directory manifest
+```
+This file allows creating symbol links/empty directoreis under / which is mounted as read-only.
+
+# /etc/auto_master
+
+```
+#
+# Automounter master map
+#
++auto_master  # Use directory service
+#/net   -hosts  -nobrowse,hidefromfinder,nosuid
+/home   auto_home -nobrowse,hidefromfinder
+/Network/Servers -fstab
+/-   -static
+/-   auto_nfs -soft,nobrowse,nosuid
+```
+
+# /etc/auto_nfs
+
+```
+/System/Volumes/Data/DVD -fstype=nfs,soft,resvport,rw,noowners 192.168.1.10:/DVD
+/System/Volumes/Data/Bluray -fstype=nfs,soft,resvport,rw,noowners 192.168.1.10:/Bluray
+```
+
+# /etc/synthetic.conf
+
+```
+DVD^ISystem/Volumes/Data/DVD
+Bluray^ISystem/Volumes/Data/Bluray
+```
+
+# /etc/nfs.conf for the NFS server
+
+```
+nfs.client.mount.options = vers=4
+```。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://aiwangfeng.github.io/post/automount%20NFS%20shares%20in%20macOS.html">
+<meta property="og:image" content="https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg">
 <title>automount NFS shares in macOS</title>
 
 
