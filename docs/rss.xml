@@ -1,5 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>BlackSheepWall</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>BlackSheepWall</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Sat, 08 Feb 2025 02:53:22 +0000</lastBuildDate><managingEditor>BlackSheepWall</managingEditor><ttl>60</ttl><webMaster>BlackSheepWall</webMaster><item><title>Bookmarks</title><link>https://aiwangfeng.github.io/post/Bookmarks.html</link><description>[c82](https://www.c82.net/)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>BlackSheepWall</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>BlackSheepWall</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Tue, 25 Feb 2025 08:30:40 +0000</lastBuildDate><managingEditor>BlackSheepWall</managingEditor><ttl>60</ttl><webMaster>BlackSheepWall</webMaster><item><title>Create Native Conda Environment for Apple Silicon</title><link>https://aiwangfeng.github.io/post/Create%20Native%20Conda%20Environment%20for%20Apple%20Silicon.html</link><description>### Command
+
+```
+CONDA_SUBDIR=osx-arm64 conda create -n native -c conda-forge python=3.11
+```
+
+### Make it permanent
+
+```
+conda activate native
+conda config --env --set subdir osx-arm64
+```
+
+### Install some packeges
+
+```
+conda install -c apple tensorflow-deps
+pip install tensorflow-macos tensorflow-metal
+```。</description><guid isPermaLink="true">https://aiwangfeng.github.io/post/Create%20Native%20Conda%20Environment%20for%20Apple%20Silicon.html</guid><pubDate>Tue, 25 Feb 2025 08:30:14 +0000</pubDate></item><item><title>Bookmarks</title><link>https://aiwangfeng.github.io/post/Bookmarks.html</link><description>[c82](https://www.c82.net/)
 [Understanding Reasoning LLMs](https://magazine.sebastianraschka.com/p/understanding-reasoning-llms)。</description><guid isPermaLink="true">https://aiwangfeng.github.io/post/Bookmarks.html</guid><pubDate>Sat, 08 Feb 2025 02:20:54 +0000</pubDate></item><item><title>Pandas DataFrame and Numpy</title><link>https://aiwangfeng.github.io/post/Pandas%20DataFrame%20and%20Numpy.html</link><description># [numpy.ndarray.flatten](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.flatten.html)
 
 ## ndarray.flatten(order='C')
