@@ -1,5 +1,40 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>BlackSheepWall</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>BlackSheepWall</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Tue, 25 Feb 2025 08:30:40 +0000</lastBuildDate><managingEditor>BlackSheepWall</managingEditor><ttl>60</ttl><webMaster>BlackSheepWall</webMaster><item><title>Create Native Conda Environment for Apple Silicon</title><link>https://aiwangfeng.github.io/post/Create%20Native%20Conda%20Environment%20for%20Apple%20Silicon.html</link><description>### Command
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>BlackSheepWall</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>BlackSheepWall</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Mon, 12 May 2025 02:52:44 +0000</lastBuildDate><managingEditor>BlackSheepWall</managingEditor><ttl>60</ttl><webMaster>BlackSheepWall</webMaster><item><title>Selfsigned Certificate</title><link>https://aiwangfeng.github.io/post/Selfsigned%20Certificate.html</link><description># Create CA key
+
+```
+openssl genrsa -aes256 -out ca.key 4096
+```
+
+# Generate a CA certificate
+
+```
+openssl req -new -x509 -sha256 -days 3650 -key ca.key -out ca.crt
+```
+
+# Create a private key for a certificate
+
+```
+openssl genrsa -out siteprivate.key 4096
+```
+
+# Create a CSR
+
+```
+openssl req -new -sha256 -subj '/CN=www.example.com' -key siteprivate.key -out site.csr
+```
+
+# Create a EXT config
+
+```
+echo 'subjectAltName=DNS:*.example.com,IP:192.168.1.100' &gt; ext.cnf
+```
+
+# Generate a site certificate
+
+```
+openssl x509 -req -sha256 -days 3650 -CA ca.crt -CAkey ca.key -in site.csr -out site.crt -extfile ext.cnf -CAcreateserial
+```
+。</description><guid isPermaLink="true">https://aiwangfeng.github.io/post/Selfsigned%20Certificate.html</guid><pubDate>Sat, 10 May 2025 04:55:09 +0000</pubDate></item><item><title>Create Native Conda Environment for Apple Silicon</title><link>https://aiwangfeng.github.io/post/Create%20Native%20Conda%20Environment%20for%20Apple%20Silicon.html</link><description>### Command
 
 ```
 CONDA_SUBDIR=osx-arm64 conda create -n native -c conda-forge python=3.11
