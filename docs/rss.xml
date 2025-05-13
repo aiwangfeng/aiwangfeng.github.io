@@ -1,5 +1,40 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>BlackSheepWall</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>BlackSheepWall</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Mon, 12 May 2025 02:57:31 +0000</lastBuildDate><managingEditor>BlackSheepWall</managingEditor><ttl>60</ttl><webMaster>BlackSheepWall</webMaster><item><title>Self-signed Certificate</title><link>https://aiwangfeng.github.io/post/Self-signed%20Certificate.html</link><description># Create CA key
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>BlackSheepWall</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>BlackSheepWall</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Tue, 13 May 2025 09:09:50 +0000</lastBuildDate><managingEditor>BlackSheepWall</managingEditor><ttl>60</ttl><webMaster>BlackSheepWall</webMaster><item><title>Tailscale TLS Certificates Auto Renew</title><link>https://aiwangfeng.github.io/post/Tailscale%20TLS%20Certificates%20Auto%20Renew.html</link><description># /etc/systemd/system/tailscale-cert.service
+
+```conf
+[Unit]
+Description=Tailscale SSL Service Renewal
+After=network.target
+After=syslog.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+WorkingDirectory=/etc/ssl/private/
+Environment='HOSTNAME=[your device's hostname]'
+Environment='DOMAIN=[your tailnet].ts.net'
+ExecStart=tailscale cert ${HOSTNAME}.${DOMAIN}
+
+[Install]
+WantedBy=multi-user.target
+```
+
+# /etc/systemd/system/tailscale-cert.timer
+
+```conf
+[Unit]
+Description=Renew Tailscale cert
+
+[Timer]
+OnCalendar=weekly
+Unit=%i.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+。</description><guid isPermaLink="true">https://aiwangfeng.github.io/post/Tailscale%20TLS%20Certificates%20Auto%20Renew.html</guid><pubDate>Tue, 13 May 2025 09:09:25 +0000</pubDate></item><item><title>Self-signed Certificate</title><link>https://aiwangfeng.github.io/post/Self-signed%20Certificate.html</link><description># Create CA key
 
 ```
 openssl genrsa -aes256 -out ca.key 4096
