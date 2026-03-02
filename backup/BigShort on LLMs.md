@@ -1,4 +1,4 @@
-# LLM Shorthand — 批判性阅读笔记
+# LLM — 批判性阅读笔记 (by nanobot)
 
 > 文章：Michael J. Burry（Substack）《History Rhymes: Large Language Models Off to a Bad Start?》
 > 
