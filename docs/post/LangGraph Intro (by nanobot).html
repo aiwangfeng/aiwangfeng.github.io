@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# LangGraph 简介与应用（面向落地）
+
+> LangGraph 是 LangChain 生态里用于构建 **“有状态（stateful）、可循环（cyclic）、可中断/可恢复（interrupt + checkpoint）”** 的 LLM/Agent 工作流框架。">
+<meta property="og:title" content="LangGraph Intro (by nanobot)">
+<meta property="og:description" content="# LangGraph 简介与应用（面向落地）
+
+> LangGraph 是 LangChain 生态里用于构建 **“有状态（stateful）、可循环（cyclic）、可中断/可恢复（interrupt + checkpoint）”** 的 LLM/Agent 工作流框架。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://aiwangfeng.github.io/post/LangGraph%20Intro%20%28by%20nanobot%29.html">
+<meta property="og:image" content="https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg">
+<title>LangGraph Intro (by nanobot)</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">LangGraph Intro (by nanobot)</h1>
+<div class="title-right">
+    <a href="https://aiwangfeng.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/aiwangfeng/aiwangfeng.github.io/issues/20" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>LangGraph 简介与应用（面向落地）</h1>
+<blockquote>
+<p>LangGraph 是 LangChain 生态里用于构建 <strong>“有状态（stateful）、可循环（cyclic）、可中断/可恢复（interrupt + checkpoint）”</strong> 的 LLM/Agent 工作流框架。它把 agent 的控制流显式建模为 <strong>图（graph）/状态机（state machine）</strong>，从而更适合生产环境的复杂流程编排。</p>
+</blockquote>
+<h2>1) LangGraph 解决什么问题？</h2>
+<p>传统“单次调用 LLM”或“线性链式（chain）”在以下场景会变得脆弱：</p>
+<ul>
+<li>需要 <strong>循环</strong>：检索→总结→发现缺口→再检索</li>
+<li>需要 <strong>分支</strong>：根据意图路由到不同子流程/子 agent</li>
+<li>需要 <strong>长流程</strong>：多步工具调用、错误重试、回退策略</li>
+<li>需要 <strong>可恢复</strong>：中途失败后从某一步继续，而不是重跑</li>
+<li>需要 <strong>人类介入</strong>：关键步骤审批、补充信息、纠错</li>
+</ul>
+<p>LangGraph 的核心价值：把这些“控制流”从 prompt 里抽出来，变成可测试、可观测、可维护的图结构。</p>
+<h2>2) 核心概念（State / Nodes / Edges）</h2>
+<p>根据 LangChain 官方文档（Graph API overview）：</p>
+<ul>
+<li><strong>State（状态）</strong>：共享数据结构，表示当前工作流快照。通常用 <code class="notranslate">TypedDict</code> / dataclass / Pydantic 定义 schema。</li>
+<li><strong>Nodes（节点）</strong>：函数（可以是 LLM 调用，也可以是普通代码/工具调用）。输入 state，输出对 state 的更新。</li>
+<li><strong>Edges（边）</strong>：决定下一步执行哪个节点。可以是固定跳转，也可以是条件分支。</li>
+</ul>
+<p>一句话：<strong>nodes 做事，edges 决定下一步做什么</strong>。</p>
+<h3>“super-step / Pregel”执行模型（为什么能并行）</h3>
+<p>LangGraph 的底层执行借鉴 Pregel 的“super-step”思想：同一 super-step 内可并行执行多个节点；当所有节点都 inactive 且无消息在途时终止。这使得某些多 agent/多工具步骤可以并行化（取决于你的图设计）。</p>
+<h2>3) Persistence / Checkpoint（持久化与可恢复）</h2>
+<p>LangGraph 的一个生产级特性是 <strong>checkpointing</strong>：</p>
+<ul>
+<li>编译 graph 时配置 <strong>checkpointer</strong>，会在每个 super-step 保存 state 快照</li>
+<li>这些快照与 <code class="notranslate">thread_id</code> 绑定，可用于：
+<ul>
+<li><strong>断点续跑</strong>（失败后恢复）</li>
+<li><strong>time-travel debugging</strong>（回看每一步 state）</li>
+<li><strong>human-in-the-loop</strong>（中断等待人工输入，再继续）</li>
+</ul>
+</li>
+</ul>
+<p>官方文档：Persistence（checkpointer 会在每个 super-step 保存 checkpoint 到 thread）。</p>
+<h2>4) LangGraph vs LangChain（怎么搭配）</h2>
+<p>一个实用的理解方式：</p>
+<ul>
+<li><strong>LangChain</strong>：提供 LLM、prompt、tool、retriever、agent executor 等“组件库”。</li>
+<li><strong>LangGraph</strong>：提供“编排与运行时”（workflow runtime），把组件组织成可循环/可分支/可持久化的图。</li>
+</ul>
+<p>你可以在 LangGraph 的 node 里：</p>
+<ul>
+<li>直接调用 LLM</li>
+<li>调用 LangChain 的工具（tools）</li>
+<li>甚至把一个 LangChain agent 当作一个 node</li>
+</ul>
+<h2>5) 典型应用场景（可直接对号入座）</h2>
+<h3>5.1 可靠的工具调用 Agent（带重试/回退）</h3>
+<ul>
+<li>Router 节点判断：要不要调用工具？调用哪个工具？</li>
+<li>Tool 节点执行工具</li>
+<li>Verifier 节点校验输出（schema/事实/安全）</li>
+<li>不通过则回到 Router 或进入“人工介入”节点</li>
+</ul>
+<h3>5.2 多 Agent 协作（Supervisor / Teams）</h3>
+<p>LangChain 官方博客把 multi-agent 连接方式总结为图结构非常自然：</p>
+<ul>
+<li><strong>Collaboration（共享草稿）</strong>：多个 agent 共享 scratchpad（信息透明，但可能冗长）</li>
+<li><strong>Supervisor（监督者路由）</strong>：监督者决定调用哪个子 agent；子 agent 各自独立上下文，最终摘要回写全局 state</li>
+<li><strong>Hierarchical Teams（分层团队）</strong>：子节点本身也是一个子图（graph），更适合复杂系统</li>
+</ul>
+<h3>5.3 Deep Research / 报告生成</h3>
+<ul>
+<li>规划（plan）→ 检索（search）→ 阅读（read）→ 归纳（synthesize）→ 缺口检测（gap）→ 循环补齐 → 输出</li>
+<li>中间可插入“引用检查/事实核验”节点</li>
+</ul>
+<h3>5.4 客服/工单自动化（带审批）</h3>
+<ul>
+<li>分类与路由 → 拉取用户/订单信息 → 生成回复草稿 → 风险/合规检查 → 人工确认 → 发送</li>
+</ul>
+<h3>5.5 长任务与异步任务</h3>
+<ul>
+<li>需要跨小时/跨天的任务（例如持续监控、分批处理）</li>
+<li>通过 checkpoint + thread_id 保持状态</li>
+</ul>
+<h2>6) 一个最小心智模型（伪代码）</h2>
+<p>下面是“状态机式 agent”的最小结构（示意，不保证可直接运行）：</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">typing</span> <span class="pl-k">import</span> <span class="pl-v">TypedDict</span>, <span class="pl-v">List</span>
+
+<span class="pl-k">class</span> <span class="pl-v">State</span>(<span class="pl-v">TypedDict</span>):
+    <span class="pl-s1">messages</span>: <span class="pl-v">List</span>[<span class="pl-smi">str</span>]
+    <span class="pl-s1">next</span>: <span class="pl-smi">str</span>
+
+<span class="pl-k">def</span> <span class="pl-en">router</span>(<span class="pl-s1">state</span>: <span class="pl-smi">State</span>) <span class="pl-c1">-&gt;</span> <span class="pl-smi">dict</span>:
+    <span class="pl-c"># 用 LLM/规则决定下一步：tool / respond / human</span>
+    <span class="pl-k">return</span> {<span class="pl-s">"next"</span>: <span class="pl-s">"tool"</span>}
+
+<span class="pl-k">def</span> <span class="pl-en">tool_node</span>(<span class="pl-s1">state</span>: <span class="pl-smi">State</span>) <span class="pl-c1">-&gt;</span> <span class="pl-smi">dict</span>:
+    <span class="pl-c"># 调用外部工具（搜索/数据库/API）并把结果写回 state</span>
+    <span class="pl-k">return</span> {<span class="pl-s">"messages"</span>: <span class="pl-s1">state</span>[<span class="pl-s">"messages"</span>] <span class="pl-c1">+</span> [<span class="pl-s">"tool result..."</span>]}
+
+<span class="pl-k">def</span> <span class="pl-en">respond</span>(<span class="pl-s1">state</span>: <span class="pl-smi">State</span>) <span class="pl-c1">-&gt;</span> <span class="pl-smi">dict</span>:
+    <span class="pl-c"># 生成最终答复</span>
+    <span class="pl-k">return</span> {<span class="pl-s">"messages"</span>: <span class="pl-s1">state</span>[<span class="pl-s">"messages"</span>] <span class="pl-c1">+</span> [<span class="pl-s">"final answer..."</span>]}
+
+<span class="pl-c"># 图：START -&gt; router -&gt; (tool_node -&gt; router) or respond -&gt; END</span></pre></div>
+<p>你真正落地时，关键不是“能跑”，而是：</p>
+<ul>
+<li>state schema 是否清晰</li>
+<li>每个 node 是否可测试</li>
+<li>是否有 checkpoint / tracing / eval</li>
+</ul>
+<h2>7) 生产落地最佳实践（结合前面 AI automation）</h2>
+<ol>
+<li><strong>先把 state 设计好</strong>：把“必须记住的东西”放进 state（而不是全塞进对话历史）</li>
+<li><strong>节点职责单一</strong>：一个 node 做一件事（检索/解析/校验/写入）</li>
+<li><strong>把不确定性显式化</strong>：低置信度就走 human-in-the-loop 分支</li>
+<li><strong>工具调用加护栏</strong>：allowlist + 参数校验 + 最小权限</li>
+<li><strong>加 verifier 节点</strong>：schema 校验、敏感信息检查、引用检查</li>
+<li><strong>启用 checkpoint</strong>：支持恢复与审计；为长任务/审批流打基础</li>
+<li><strong>可观测性</strong>：记录每步输入输出（脱敏）、耗时、错误、重试次数</li>
+</ol>
+<h2>8) 参考链接</h2>
+<ul>
+<li>Graph API overview（State / Nodes / Edges、super-step）<br>
+<a href="https://docs.langchain.com/oss/python/langgraph/graph-api" rel="nofollow">https://docs.langchain.com/oss/python/langgraph/graph-api</a></li>
+<li>Persistence（checkpoint / thread / StateSnapshot）<br>
+<a href="https://docs.langchain.com/oss/python/langgraph/persistence" rel="nofollow">https://docs.langchain.com/oss/python/langgraph/persistence</a></li>
+<li>LangGraph Multi-Agent Workflows（collaboration / supervisor / hierarchical teams）<br>
+<a href="https://blog.langchain.com/langgraph-multi-agent-workflows/" rel="nofollow">https://blog.langchain.com/langgraph-multi-agent-workflows/</a></li>
+</ul>
+<hr>
+<h2>你如果要“用 LangGraph 做一个可用的自动化 agent”，我需要你回答 3 个问题</h2>
+<ol>
+<li>你的目标任务是什么（例如：自动生成周报/自动处理工单/自动研究并写报告）？</li>
+<li>需要哪些工具（网页搜索、GitHub、数据库、shell、内部 API）？</li>
+<li>哪些步骤必须人工确认（高风险点）？</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://aiwangfeng.github.io">Just do it!</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("3/25/2024"!=""){
+    var startSite=new Date("3/25/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","aiwangfeng/aiwangfeng.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>
