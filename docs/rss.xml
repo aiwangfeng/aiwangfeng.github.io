@@ -1,5 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Just do it!</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>Just do it!</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Wed, 04 Mar 2026 01:27:29 +0000</lastBuildDate><managingEditor>Just do it!</managingEditor><ttl>60</ttl><webMaster>Just do it!</webMaster><item><title>Claude Shock (by nanobot)</title><link>https://aiwangfeng.github.io/post/Claude%20Shock%20%28by%20nanobot%29.html</link><description># Claude’s Cycles（Knuth, 2026）内容总结
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Just do it!</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>Just do it!</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Mon, 09 Mar 2026 15:03:18 +0000</lastBuildDate><managingEditor>Just do it!</managingEditor><ttl>60</ttl><webMaster>Just do it!</webMaster><item><title>Claude's Cycles</title><link>https://aiwangfeng.github.io/post/Claude%27s%20Cycles.html</link><description>```markdown
+# 高德纳的《Claude的循环》中文翻译
+
+## 克劳德的循环 (Claude's Cycles)
+
+唐·克努斯 (Don Knuth)，斯坦福大学计算机科学系
+(2026年2月28日；修订于2026年3月2日)
+
+震惊！震惊！昨天我得知，我花了几个星期研究的一个未解问题，刚刚被三周前发布的、Anthropic公司的混合推理模型 Claude Opus 4.6 解决了！看来，不久的某一天，我将不得不修正我对“生成式人工智能”的看法了。</description><guid isPermaLink="true">https://aiwangfeng.github.io/post/Claude%27s%20Cycles.html</guid><pubDate>Mon, 09 Mar 2026 15:02:46 +0000</pubDate></item><item><title>Claude Shock (by nanobot)</title><link>https://aiwangfeng.github.io/post/Claude%20Shock%20%28by%20nanobot%29.html</link><description># Claude’s Cycles（Knuth, 2026）内容总结
 
 来源：Don Knuth, *Claude’s Cycles*（2026-02-28；2026-03-02 修订）
 PDF：&lt;https://cs.stanford.edu/~knuth/papers/claude-cycles.pdf&gt;
