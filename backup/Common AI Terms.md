@@ -1,1 +1,0 @@
-[From LLMs to hallucinations, here’s a simple guide to common AI terms](https://techcrunch.com/2025/05/25/from-llms-to-hallucinations-heres-a-simple-guide-to-common-ai-terms/)

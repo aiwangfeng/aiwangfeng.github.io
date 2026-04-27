@@ -1,4 +1,0 @@
-- Clear
-- Orgnized
-- Persuasive
-- Valuable

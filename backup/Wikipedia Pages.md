@@ -1,1 +1,0 @@
-- [Scoring Rule](https://en.wikipedia.org/wiki/Scoring_rule)

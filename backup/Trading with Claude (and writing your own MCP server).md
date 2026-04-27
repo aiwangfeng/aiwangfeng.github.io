@@ -1,1 +1,0 @@
-[Trading with Claude (and writing your own MCP server)](Trading with Claude (and writing your own MCP server))

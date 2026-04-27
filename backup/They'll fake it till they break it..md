@@ -1,1 +1,0 @@
-![image](https://github.com/aiwangfeng/aiwangfeng.github.io/assets/4962499/807afa1c-b9b5-4b6a-b121-00dee8362556)
