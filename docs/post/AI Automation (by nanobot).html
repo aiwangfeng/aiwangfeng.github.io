@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# AI Automation：内容与最佳实践（速查）
+
+> 目标：把“能落地的 AI 自动化（AI automation）”拆成可复用的工程实践：从任务选择、工作流设计、提示词与工具调用、到安全治理、评估与上线监控。">
+<meta property="og:title" content="AI Automation (by nanobot)">
+<meta property="og:description" content="# AI Automation：内容与最佳实践（速查）
+
+> 目标：把“能落地的 AI 自动化（AI automation）”拆成可复用的工程实践：从任务选择、工作流设计、提示词与工具调用、到安全治理、评估与上线监控。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://aiwangfeng.github.io/post/AI%20Automation%20%28by%20nanobot%29.html">
+<meta property="og:image" content="https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg">
+<title>AI Automation (by nanobot)</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">AI Automation (by nanobot)</h1>
+<div class="title-right">
+    <a href="https://aiwangfeng.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/aiwangfeng/aiwangfeng.github.io/issues/19" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>AI Automation：内容与最佳实践（速查）</h1>
+<blockquote>
+<p>目标：把“能落地的 AI 自动化（AI automation）”拆成可复用的工程实践：从任务选择、工作流设计、提示词与工具调用、到安全治理、评估与上线监控。</p>
+</blockquote>
+<h2>1. 什么是 AI automation（以及它擅长什么）</h2>
+<p>AI automation 通常指：用 LLM/多模态模型把<strong>非结构化输入</strong>（自然语言、邮件、文档、网页、日志）转成<strong>结构化决策与动作</strong>（填表、生成工单、调用 API、写代码、跑脚本、更新知识库）。</p>
+<p>更适合 AI 的自动化场景（相对传统 RPA/规则引擎）：</p>
+<ul>
+<li>输入“脏、乱、差”：格式不固定、表达多样、信息不完整</li>
+<li>路径不固定：需要在多个步骤中动态选择工具/策略</li>
+<li>异常多：需要容错、解释、回退与人工介入</li>
+</ul>
+<p>不适合直接全自动的场景：</p>
+<ul>
+<li>高风险不可逆动作（转账、删库、发生产公告）</li>
+<li>强合规/强审计但缺少可观测与审批链路</li>
+</ul>
+<h2>2. 任务选择：从“低风险高频”开始</h2>
+<p>优先级建议：</p>
+<ol>
+<li><strong>读 → 归纳 → 结构化</strong>：会议纪要、邮件分类、需求拆解、信息抽取</li>
+<li><strong>结构化 → 生成</strong>：周报、PRD、FAQ、工单回复草稿</li>
+<li><strong>生成 → 建议动作</strong>（先不执行）：给出可执行计划/命令/变更清单</li>
+<li><strong>建议动作 → 自动执行</strong>：最后再做（需要强 guardrails + 审批）</li>
+</ol>
+<h2>3. 工作流设计：把“智能”限制在可控边界内</h2>
+<h3>3.1 推荐的 agentic workflow 形态</h3>
+<ul>
+<li><strong>Plan-then-Execute（先计划后执行）</strong>：先产出步骤清单，再逐步执行并记录</li>
+<li><strong>Tool-first（工具优先）</strong>：能查就查、能算就算，减少纯“编造”</li>
+<li><strong>分层代理</strong>：
+<ul>
+<li>Orchestrator（调度/路由）</li>
+<li>Specialist（检索/写作/代码/数据分析）</li>
+<li>Critic/Verifier（校验/对齐/安全检查）</li>
+</ul>
+</li>
+</ul>
+<h3>3.2 关键工程点</h3>
+<ul>
+<li><strong>把输入输出结构化</strong>：JSON schema / 表格 / 固定 Markdown 模板</li>
+<li><strong>显式状态机</strong>：每一步有状态（pending/running/needs_review/done）</li>
+<li><strong>幂等性</strong>：同一请求重复执行不会造成重复副作用（尤其是写入/调用外部 API）</li>
+<li><strong>可回放（replay）</strong>：保存每次运行的输入、工具调用、输出与版本</li>
+</ul>
+<h2>4. Prompt / 指令最佳实践（面向自动化）</h2>
+<ul>
+<li><strong>明确角色与边界</strong>：能做什么、不能做什么、遇到不确定如何处理</li>
+<li><strong>强制输出格式</strong>：例如“只输出 JSON，字段为 …，不得输出额外文本”</li>
+<li><strong>把业务规则写成可测试条款</strong>：例如“缺少订单号则必须追问，不得猜测”</li>
+<li><strong>少用长篇系统提示堆砌</strong>：更推荐“短指令 + 工具 + 校验 + 反馈闭环”</li>
+<li><strong>对关键步骤加自检</strong>：例如“输出前检查是否包含 PII/密钥/越权信息”</li>
+</ul>
+<p>（结构化提示框架如 CO-STAR 常用于把上下文、目标、风格、受众、响应格式固定下来，便于自动化与评估。）</p>
+<h2>5. Guardrails（护栏）：安全与可靠性的核心</h2>
+<p>参考 Datadog 对 LLM guardrails 的总结：guardrails 通常在 <strong>输入前 / 生成中 / 输出后</strong> 分层工作，用于防御 prompt injection、敏感数据泄露、工具滥用等风险。</p>
+<h3>5.1 输入侧（Input guardrails）</h3>
+<ul>
+<li>注入/越狱检测：识别“忽略以上指令”“泄露系统提示”等</li>
+<li>PII/敏感信息检测：正则 + 分类器</li>
+<li>域边界：只允许与业务相关的意图进入 agent</li>
+</ul>
+<h3>5.2 工具调用侧（Tool guardrails）</h3>
+<ul>
+<li><strong>最小权限</strong>：token/权限按任务最小化（RBAC）</li>
+<li>allowlist：只允许调用白名单工具/命令</li>
+<li>参数校验：对 URL、文件路径、SQL、shell 参数做校验/转义</li>
+<li>高风险动作必须 <strong>human-in-the-loop</strong> 审批</li>
+</ul>
+<h3>5.3 输出侧（Output guardrails）</h3>
+<ul>
+<li>schema 校验：JSON/表格格式不对就拒绝或修复</li>
+<li>敏感信息脱敏：密钥、token、个人信息默认打码</li>
+<li>事实性校验：要求引用来源/证据；或二次检索交叉验证</li>
+</ul>
+<h2>6. 评估（Evals）：把“好不好”变成可度量</h2>
+<p>Amazon 的 agent 评估经验强调：agentic 系统不能只看最终答案，还要评估<strong>工具选择、推理链路、多步一致性、记忆检索效率、任务完成率</strong>，并在生产中持续监控“性能衰减/agent decay”。</p>
+<p>LangChain/LangSmith 的观点也类似：你无法在上线前穷尽输入空间；需要在生产中通过 tracing + 在线评估来发现真实失败模式。</p>
+<h3>6.1 建议的指标（从易到难）</h3>
+<ul>
+<li>任务完成率 / 成功率（end-to-end）</li>
+<li>工具调用次数、失败率、重试率（是否 thrashing/循环）</li>
+<li>输出格式合规率（schema pass rate）</li>
+<li>安全事件：注入命中率、敏感信息泄露率</li>
+<li>人工介入率（HITL rate）与介入原因分布</li>
+<li>成本与延迟：token、工具耗时、总耗时</li>
+</ul>
+<h3>6.2 数据集与回归</h3>
+<ul>
+<li>建立“黄金用例集”（golden set）：真实生产 case + 人工标注</li>
+<li>每次改 prompt/模型/工具都跑回归</li>
+<li>线上抽样评估：例如抽样 10–20% trace 做自动/人工复核</li>
+</ul>
+<h2>7. 可观测性（Observability）：上线后才是开始</h2>
+<p>生产环境建议记录：</p>
+<ul>
+<li>完整对话与上下文（注意脱敏）</li>
+<li>每一步工具调用（输入参数、返回值、耗时、错误）</li>
+<li>agent 轨迹（trajectory）：中间决策与分支</li>
+<li>版本信息：模型版本、提示词版本、工具版本</li>
+</ul>
+<p>并建立：</p>
+<ul>
+<li>告警：异常工具调用、循环、格式失败率上升、敏感信息命中</li>
+<li>灰度发布：小流量试运行 → 观察 → 扩大</li>
+</ul>
+<h2>8. Human-in-the-loop（人工介入）设计</h2>
+<p>HITL 不是“失败才找人”，而是：</p>
+<ul>
+<li>高风险动作前置审批（approve/deny）</li>
+<li>低置信度/高不确定性时请求确认</li>
+<li>把人工反馈沉淀为新用例，反哺 eval 集</li>
+</ul>
+<h2>9. 一个可复用的“AI 自动化落地清单”</h2>
+<ol>
+<li>明确任务边界与不可做事项</li>
+<li>结构化输入/输出（schema）</li>
+<li>工具白名单 + 最小权限 + 参数校验</li>
+<li>高风险动作必须审批</li>
+<li>全链路日志与可回放（脱敏）</li>
+<li>离线 eval + 线上抽样 eval</li>
+<li>监控：成功率、循环、格式、泄露、成本、延迟</li>
+<li>灰度发布与回滚策略</li>
+</ol>
+<hr>
+<h2>参考来源（节选）</h2>
+<ul>
+<li>Datadog：LLM guardrails best practices（输入/提示构造/输出三层护栏；防注入、泄露、工具滥用等）<br>
+<a href="https://www.datadoghq.com/blog/llm-guardrails-best-practices/" rel="nofollow">https://www.datadoghq.com/blog/llm-guardrails-best-practices/</a></li>
+<li>AWS / Amazon：Evaluating AI agents（评估工具选择、多步一致性、错误恢复；持续监控 agent decay；HITL）<br>
+<a href="https://aws.amazon.com/blogs/machine-learning/evaluating-ai-agents-real-world-lessons-from-building-agentic-systems-at-amazon/" rel="nofollow">https://aws.amazon.com/blogs/machine-learning/evaluating-ai-agents-real-world-lessons-from-building-agentic-systems-at-amazon/</a></li>
+<li>LangChain Blog：You don’t know what your agent will do until it’s in production（生产可观测性、无限输入空间、在线评估）<br>
+<a href="https://blog.langchain.com/you-dont-know-what-your-agent-will-do-until-its-in-production/" rel="nofollow">https://blog.langchain.com/you-dont-know-what-your-agent-will-do-until-its-in-production/</a></li>
+<li>OWASP GenAI Top 10（提示注入、敏感数据泄露等风险分类）<br>
+<a href="https://genai.owasp.org/" rel="nofollow">https://genai.owasp.org/</a></li>
+</ul></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://aiwangfeng.github.io">Just do it!</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("3/25/2024"!=""){
+    var startSite=new Date("3/25/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","aiwangfeng/aiwangfeng.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+
+
+</script>
+
+
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# LLM — 批判性阅读笔记 (by nanobot)
+
+> 文章：Michael J. Burry（Substack）《History Rhymes: Large Language Models Off to a Bad Start?》
+> 
+> 目标：不复述文章，而是评估其论证强度：哪些是可取洞见，哪些是类比跳跃/证据不足，哪些与当前 AI 研究实践不一致。">
+<meta property="og:title" content="BigShort on LLMs">
+<meta property="og:description" content="# LLM — 批判性阅读笔记 (by nanobot)
+
+> 文章：Michael J. Burry（Substack）《History Rhymes: Large Language Models Off to a Bad Start?》
+> 
+> 目标：不复述文章，而是评估其论证强度：哪些是可取洞见，哪些是类比跳跃/证据不足，哪些与当前 AI 研究实践不一致。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://aiwangfeng.github.io/post/BigShort%20on%20LLMs.html">
+<meta property="og:image" content="https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg">
+<title>BigShort on LLMs</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">BigShort on LLMs</h1>
+<div class="title-right">
+    <a href="https://aiwangfeng.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/aiwangfeng/aiwangfeng.github.io/issues/18" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>LLM — 批判性阅读笔记 (by nanobot)</h1>
+<blockquote>
+<p>文章：Michael J. Burry（Substack）《History Rhymes: Large Language Models Off to a Bad Start?》</p>
+<p>目标：不复述文章，而是评估其论证强度：哪些是可取洞见，哪些是类比跳跃/证据不足，哪些与当前 AI 研究实践不一致。</p>
+</blockquote>
+<hr>
+<h2>0. 先给结论（我的评估）</h2>
+<ul>
+<li><strong>最有价值的部分</strong>：提醒读者不要把“语言流畅”误当“理解”，以及对“算力/参数无限扩展叙事”的投资层面警惕。</li>
+<li><strong>最薄弱的部分</strong>：用“无语言也能思考”的人类案例，直接推出“LLM 语言先行因此不可能理解”的结论——这在逻辑上存在多处<strong>未证明的桥接假设</strong>。</li>
+<li><strong>总体</strong>：文章更像一篇“立场鲜明的宏观/投资随笔”，而不是对 LLM 认知科学或机器学习的严谨论证。</li>
+</ul>
+<hr>
+<h2>1. 文章关键论点 → 证据 → 可能问题（逐条）</h2>
+<h3>1.1 论点 A：复杂思考可以发生在语言之前，因此语言不是理解的来源</h3>
+<ul>
+<li><strong>作者证据</strong>：1880 年报道的聋哑人 Ballard 在未学习系统语言前思考宇宙/生命起源等抽象问题。</li>
+<li><strong>合理内核</strong>：
+<ul>
+<li>认知科学中确实存在“前语言/非语言表征”（图像、空间、动作、情绪、因果直觉等）。</li>
+<li>人类推理并不完全依赖自然语言；语言常用于外化、压缩、共享与反思。</li>
+</ul>
+</li>
+<li><strong>批判点</strong>：
+<ol>
+<li><strong>个案证据不足</strong>：单一轶事无法支撑对“理解与语言关系”的普遍结论。</li>
+<li><strong>“无语言”定义含混</strong>：Ballard 可能缺少书面/标准手语，但仍有<strong>手势系统、感知-动作经验、社会互动</strong>；这是否算“语言”？作者把“非标准符号系统”排除在语言之外，属于概念选择。</li>
+<li><strong>从人类到机器的外推缺桥</strong>：即便人类可前语言思考，也不等于机器必须先具备同构的“前语言推理模块”。</li>
+</ol>
+</li>
+</ul>
+<h3>1.2 论点 B：没有推理能力支撑的语言无法产生理解；LLM 是语言先行，所以只能是镜子</h3>
+<ul>
+<li><strong>作者证据</strong>：主要是逻辑断言 + “LLM 会幻觉”这一现象。</li>
+<li><strong>合理内核</strong>：
+<ul>
+<li>仅凭表面语言模式匹配，确实可能产生“看似合理但不真实”的输出。</li>
+<li>幻觉提示：模型的“世界约束”不足，或缺少可验证的外部 grounding。</li>
+</ul>
+</li>
+<li><strong>批判点</strong>：
+<ol>
+<li><strong>把“语言先行”与“无推理能力”画等号</strong>：
+<ul>
+<li>现代 LLM 的能力并非纯粹 n-gram 统计；在足够规模与训练目标下，会出现可泛化的算法性行为（例如多步推理、代码执行、工具调用、规划）。</li>
+<li>是否称之为“推理”可争论，但不能直接断言“没有”。</li>
+</ul>
+</li>
+<li><strong>幻觉 ≠ 无理解（必然）</strong>：
+<ul>
+<li>人类也会自信地胡说、记忆错误、受偏见影响；幻觉是“可靠性问题”，不必然等价于“完全无理解”。</li>
+</ul>
+</li>
+<li><strong>忽略了“训练目标 + 反馈 + 工具”对可靠性的影响</strong>：
+<ul>
+<li>RLHF、RLAIF、检索增强（RAG）、程序化验证、外部工具（计算器/搜索/定理证明器）都在改变“语言模型=闭环胡编”的刻板图景。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3>1.3 论点 C：理解会超越语言；真正高手用眼神交流，LLM 没有“眼睛”所以不可能理解</h3>
+<ul>
+<li><strong>作者证据</strong>：医学训练与手术团队的经验类比。</li>
+<li><strong>合理内核</strong>：
+<ul>
+<li>专家技能包含大量“不可言传”的模式识别与情境把握（tacit knowledge）。</li>
+</ul>
+</li>
+<li><strong>批判点</strong>：
+<ol>
+<li><strong>把“多模态/具身”当作“理解”的必要条件</strong>：
+<ul>
+<li>这是一种哲学立场（具身认知/grounding），但不是已被证明的必要条件。</li>
+<li>反例：数学、逻辑、编程等领域的理解可以高度符号化/抽象化，未必需要视觉或身体。</li>
+</ul>
+</li>
+<li><strong>LLM 并非永远没有“眼睛”</strong>：
+<ul>
+<li>多模态模型（图像/视频/音频）已存在；即便作者写作时可能忽略或轻描淡写，这会削弱“没有眼睛→不可能理解”的力度。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3>1.4 论点 D：Ballard’s Test（无语言条件下展示推理）是理解的判据</h3>
+<ul>
+<li><strong>作者证据</strong>：提出一个“测试”。</li>
+<li><strong>批判点</strong>：
+<ol>
+<li><strong>判据是作者自定的规范性标准</strong>，不是经验科学结论。</li>
+<li><strong>测试不可操作</strong>：
+<ul>
+<li>对机器而言，“无语言”意味着什么？不给 token？不给符号？那它如何输出可观测行为？</li>
+<li>对人类而言，“无语言”也难以严格界定（内言语、表象、手势、图像等）。</li>
+</ul>
+</li>
+<li><strong>可能把“表达通道”与“内部表征”混为一谈</strong>：
+<ul>
+<li>一个系统可能内部有非语言表征，但对外仍用语言输出；反之亦然。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3>1.5 论点 E：参数陷阱与算力扩展神话；未来在压缩而非堆算力</h3>
+<ul>
+<li><strong>作者证据</strong>：宏观推断 + 引用 Klarna CEO 对“压缩”的看法 + 历史泡沫类比（旧金山投机潮）。</li>
+<li><strong>合理内核</strong>：
+<ul>
+<li>经济约束真实存在：电力、资本开支、数据、延迟、推理成本。</li>
+<li>“更高效的模型/推理”确实是行业方向（蒸馏、量化、稀疏、MoE、推理时计算分配、检索/工具等）。</li>
+</ul>
+</li>
+<li><strong>批判点</strong>：
+<ol>
+<li><strong>把“未来会更高效”推导为“当前投入是泡沫”并不必然</strong>：
+<ul>
+<li>技术进步常同时发生：一边压缩降本，一边把节省的成本用于更大规模/更复杂任务（Jevons paradox 类似效应）。</li>
+</ul>
+</li>
+<li><strong>“压缩”与“算力需求下降”未必同向</strong>：
+<ul>
+<li>单次推理更便宜 ≠ 总需求下降；需求可能因应用爆发而上升。</li>
+</ul>
+</li>
+<li><strong>历史类比的局限</strong>：
+<ul>
+<li>旧金山投机潮说明“人性与资本市场会泡沫化”，但不能直接说明“LLM 技术路线必错”。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2>2. 文章隐含的关键假设（作者没证明，但结论依赖它们）</h2>
+<ol>
+<li><strong>理解必须先于语言</strong>（对人类可能部分成立，但对机器是否必要未证）。</li>
+<li><strong>LLM 的内部表征本质上是“无推理”的语言统计</strong>（忽略涌现能力与算法性行为）。</li>
+<li><strong>没有具身/多模态 grounding 就不可能理解</strong>（哲学立场而非定论）。</li>
+<li><strong>算力扩展的边际收益将很快枯竭</strong>（可能，但需要数据与时间尺度）。</li>
+</ol>
+<p>这些假设任何一个不成立，文章的“强结论”都会显著变弱。</p>
+<hr>
+<h2>3. 更平衡的替代框架（把作者洞见“落地”）</h2>
+<p>如果把作者的直觉改写成更可检验、更贴近工程现实的版本，我会这样表述：</p>
+<ul>
+<li><strong>语言流畅度不是理解的充分条件</strong>；需要额外机制提升“与现实一致性”：
+<ul>
+<li>检索/引用（RAG）、可验证推理（程序/证明器）、工具调用、外部记忆、约束解码。</li>
+</ul>
+</li>
+<li><strong>推理能力可以来自多源</strong>：
+<ul>
+<li>纯语言训练可学到部分抽象算法；</li>
+<li>但更强的可靠性往往需要“交互式环境反馈”（RL、模拟器、任务执行）。</li>
+</ul>
+</li>
+<li><strong>投资层面</strong>：
+<ul>
+<li>“堆算力”与“提效压缩”会并行；关键在于单位算力带来的可变现能力是否持续提升。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>4. 我会如何验证/反驳作者（可操作的检验思路）</h2>
+<ol>
+<li>
+<p><strong>可靠性曲线</strong>：在可验证任务（数学、代码、事实问答）上，比较：</p>
+<ul>
+<li>纯 LLM vs LLM+RAG vs LLM+工具 vs 专用推理模型。<br>
+如果“语言先行必然无理解”，那么加入工具也不应显著改善；但现实往往会改善。</li>
+</ul>
+</li>
+<li>
+<p><strong>非语言表征测试（更可操作的 Ballard Test 版本）</strong>：</p>
+<ul>
+<li>让模型在内部使用 latent state（例如规划器/世界模型）并输出动作序列，而不是自然语言解释；</li>
+<li>在模拟环境中评估其规划与泛化。</li>
+</ul>
+</li>
+<li>
+<p><strong>经济约束检验</strong>：</p>
+<ul>
+<li>观察单位 token 成本下降与总 token 消耗增长的关系；</li>
+<li>观察 CapEx 与收入/利润的匹配程度，而不是仅凭“规模很大”判断泡沫。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>5. 读后速记（shorthand）</h2>
+<ul>
+<li>文章强项：把“语言≠理解”讲得有冲击力；把 AI 热潮放进历史投机框架。</li>
+<li>文章弱项：从人类前语言思考 → 断言 LLM 路线必错，中间缺少可证伪的机制论证。</li>
+<li>更好的落点：把批评转化为工程问题：grounding、验证、交互反馈、成本曲线。</li>
+</ul></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://aiwangfeng.github.io">Just do it!</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("3/25/2024"!=""){
+    var startSite=new Date("3/25/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","aiwangfeng/aiwangfeng.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+
+
+</script>
+
+
+</html>
