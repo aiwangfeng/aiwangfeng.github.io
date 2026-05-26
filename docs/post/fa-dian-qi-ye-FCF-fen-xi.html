@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# A+H 股发电企业自由现金流质量排名
+
+> 数据来源：各公司 2025 年年报（Sina Finance 现金流量表/利润表，截至 2026-04 披露）
+> FCF 定义：经营活动现金流量净额 − 购建固定资产、无形资产和其他长期资产支付的现金
+> 注意：A+H 股严格限定为两地双重上市的发电企业，不含单市场上市或非发电主业公司
+> Author: jadeking (玉帝) | Date: 2026-05-26
+
+---
+
+## 一、范围界定
+
+**A+H 股发电企业**（截至 2026 年 5 月，纯发电/电力运营商，剔除煤矿、设备制造）：
+
+| # | 公司 | A 股代码 | H 股代码 | 主业类型 |
+|:--|:-----|:--------|:--------|:---------|
+| 1 | 华能国际 | 600011.SH | 0902.HK | 火电 + 风光 |
+| 2 | 华电国际 | 600027.SH | 1071.HK | 火电 + 风光 |
+| 3 | 大唐发电 | 601991.SH | 0991.HK | 火电 + 风光 |
+| 4 | 中国广核 | 003816.SZ | 1816.HK | 核电 |
+| 5 | 龙源电力 | 001289.SZ | 0916.HK | 风电 + 光伏 |
+| 6 | 新天绿能 | 600956.SH | 0956.HK | 天然气 + 风电 |
+
+**未纳入的原因**：
+- 中国神华（601088/1088）→ 煤矿开采为主，发电为辅
+- 东方电气（600875/1072）、上海电气（601727/2727）→ 设备制造
+- 国电电力（600795）、长江电力（600900）、中国核电（601985）、华润电力（0836）、中国电力（2380）→ 仅单地上市，非 A+H
+
+> **结论：A+H 发电企业仅有 6 家，已全覆盖。">
+<meta property="og:title" content="发电企业FCF分析">
+<meta property="og:description" content="# A+H 股发电企业自由现金流质量排名
+
+> 数据来源：各公司 2025 年年报（Sina Finance 现金流量表/利润表，截至 2026-04 披露）
+> FCF 定义：经营活动现金流量净额 − 购建固定资产、无形资产和其他长期资产支付的现金
+> 注意：A+H 股严格限定为两地双重上市的发电企业，不含单市场上市或非发电主业公司
+> Author: jadeking (玉帝) | Date: 2026-05-26
+
+---
+
+## 一、范围界定
+
+**A+H 股发电企业**（截至 2026 年 5 月，纯发电/电力运营商，剔除煤矿、设备制造）：
+
+| # | 公司 | A 股代码 | H 股代码 | 主业类型 |
+|:--|:-----|:--------|:--------|:---------|
+| 1 | 华能国际 | 600011.SH | 0902.HK | 火电 + 风光 |
+| 2 | 华电国际 | 600027.SH | 1071.HK | 火电 + 风光 |
+| 3 | 大唐发电 | 601991.SH | 0991.HK | 火电 + 风光 |
+| 4 | 中国广核 | 003816.SZ | 1816.HK | 核电 |
+| 5 | 龙源电力 | 001289.SZ | 0916.HK | 风电 + 光伏 |
+| 6 | 新天绿能 | 600956.SH | 0956.HK | 天然气 + 风电 |
+
+**未纳入的原因**：
+- 中国神华（601088/1088）→ 煤矿开采为主，发电为辅
+- 东方电气（600875/1072）、上海电气（601727/2727）→ 设备制造
+- 国电电力（600795）、长江电力（600900）、中国核电（601985）、华润电力（0836）、中国电力（2380）→ 仅单地上市，非 A+H
+
+> **结论：A+H 发电企业仅有 6 家，已全覆盖。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://aiwangfeng.github.io/post/fa-dian-qi-ye-FCF-fen-xi.html">
+<meta property="og:image" content="https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg">
+<title>发电企业FCF分析</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">发电企业FCF分析</h1>
+<div class="title-right">
+    <a href="https://aiwangfeng.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/aiwangfeng/aiwangfeng.github.io/issues/27" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>A+H 股发电企业自由现金流质量排名</h1>
+<blockquote>
+<p>数据来源：各公司 2025 年年报（Sina Finance 现金流量表/利润表，截至 2026-04 披露）<br>
+FCF 定义：经营活动现金流量净额 − 购建固定资产、无形资产和其他长期资产支付的现金<br>
+注意：A+H 股严格限定为两地双重上市的发电企业，不含单市场上市或非发电主业公司<br>
+Author: jadeking (玉帝) | Date: 2026-05-26</p>
+</blockquote>
+<hr>
+<h2>一、范围界定</h2>
+<p><strong>A+H 股发电企业</strong>（截至 2026 年 5 月，纯发电/电力运营商，剔除煤矿、设备制造）：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="left">#</th>
+<th align="left">公司</th>
+<th align="left">A 股代码</th>
+<th align="left">H 股代码</th>
+<th align="left">主业类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">1</td>
+<td align="left">华能国际</td>
+<td align="left">600011.SH</td>
+<td align="left">0902.HK</td>
+<td align="left">火电 + 风光</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">华电国际</td>
+<td align="left">600027.SH</td>
+<td align="left">1071.HK</td>
+<td align="left">火电 + 风光</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">大唐发电</td>
+<td align="left">601991.SH</td>
+<td align="left">0991.HK</td>
+<td align="left">火电 + 风光</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">中国广核</td>
+<td align="left">003816.SZ</td>
+<td align="left">1816.HK</td>
+<td align="left">核电</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">龙源电力</td>
+<td align="left">001289.SZ</td>
+<td align="left">0916.HK</td>
+<td align="left">风电 + 光伏</td>
+</tr>
+<tr>
+<td align="left">6</td>
+<td align="left">新天绿能</td>
+<td align="left">600956.SH</td>
+<td align="left">0956.HK</td>
+<td align="left">天然气 + 风电</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><strong>未纳入的原因</strong>：</p>
+<ul>
+<li>中国神华（601088/1088）→ 煤矿开采为主，发电为辅</li>
+<li>东方电气（600875/1072）、上海电气（601727/2727）→ 设备制造</li>
+<li>国电电力（600795）、长江电力（600900）、中国核电（601985）、华润电力（0836）、中国电力（2380）→ 仅单地上市，非 A+H</li>
+</ul>
+<blockquote>
+<p><strong>结论：A+H 发电企业仅有 6 家，已全覆盖。</strong></p>
+</blockquote>
+<hr>
+<h2>二、核心数据矩阵（FY2025）</h2>
+<pre class="notranslate"><code class="notranslate">指标                 华能国际    华电国际    大唐发电    中国广核    龙源电力    新天绿能
+─────────────────────────────────────────────────────────────────────────────────────
+营收(亿元)            2,292.88    1,260.13    1,212.55      756.97      302.53      198.31
+净利润(亿元)            195.05       82.17      100.23      147.31       54.88       20.14
+归母净利润(亿元)        144.10       60.70       73.86       97.65       45.26       18.26
+经营现金流 CFO(亿元)    672.13      272.21      378.36      299.71      218.33       72.97
+资本开支(亿元)          583.26      150.63      283.09      340.57      239.09       92.73
+FCF(亿元)              +88.87     +121.58      +95.27      -40.86      -20.76      -19.76
+─────────────────────────────────────────────────────────────────────────────────────
+FCF/净利润              45.6%      148.0%       95.1%      -27.7%      -37.8%      -98.1%
+FCF/营收                 3.9%        9.6%        7.9%       -5.4%       -6.9%      -10.0%
+净利润率                8.5%        6.5%        8.3%       19.5%       18.1%       10.2%
+毛利率                 12.1%       11.3%       19.0%       44.1%       35.0%       20.8%
+</code></pre>
+<hr>
+<h2>三、FCF 质量排名</h2>
+<h3>排名方法</h3>
+<p>采用三维综合评分（各维度归一化后加权）：</p>
+<ul>
+<li><strong>FCF 绝对值权重 40%</strong>——规模本身就是质量的证明</li>
+<li><strong>FCF/净利润转换率权重 35%</strong>——利润中有多少真正转化成现金</li>
+<li><strong>FCF/营收权重 25%</strong>——销售收现效率</li>
+</ul>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center">排名</th>
+<th align="left">FCF综合评分</th>
+<th align="left">公司</th>
+<th align="left">FCF(亿元)</th>
+<th align="left">FCF/净利润</th>
+<th align="left">FCF/营收</th>
+<th align="left">判断</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">🥇</td>
+<td align="left"><strong>1.000</strong></td>
+<td align="left"><strong>华电国际</strong></td>
+<td align="left">+121.58</td>
+<td align="left">148.0%</td>
+<td align="left">9.6%</td>
+<td align="left">🟢 现金之王</td>
+</tr>
+<tr>
+<td align="center">🥈</td>
+<td align="left">0.828</td>
+<td align="left">大唐发电</td>
+<td align="left">+95.27</td>
+<td align="left">95.1%</td>
+<td align="left">7.9%</td>
+<td align="left">🟢 现金充沛</td>
+</tr>
+<tr>
+<td align="center">🥉</td>
+<td align="left">0.608</td>
+<td align="left">华能国际</td>
+<td align="left">+88.87</td>
+<td align="left">45.6%</td>
+<td align="left">3.9%</td>
+<td align="left">🟡 现金尚可</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="left">0.000</td>
+<td align="left">中国广核</td>
+<td align="left">−40.86</td>
+<td align="left">−27.7%</td>
+<td align="left">−5.4%</td>
+<td align="left">🔴 现金黑洞</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="left">0.000</td>
+<td align="left">龙源电力</td>
+<td align="left">−20.76</td>
+<td align="left">−37.8%</td>
+<td align="left">−6.9%</td>
+<td align="left">🔴 现金黑洞</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="left">0.000</td>
+<td align="left">新天绿能</td>
+<td align="left">−19.76</td>
+<td align="left">−98.1%</td>
+<td align="left">−10.0%</td>
+<td align="left">🔴 现金黑洞</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>四、逐家深度透视</h2>
+<h3>🥇 第 1 位：华电国际（600027.SH / 1071.HK）—— FCF 质量第一</h3>
+<p><strong>FCF: +121.58 亿元，FCF/净利润: 148.0%，FCF/营收: 9.6%</strong></p>
+<p>华电国际以 1,260 亿营收的体量创造 122 亿自由现金流，FCF/净利润高达 148%——意味着它产生的现金远超会计利润。这一现象的核心原因：</p>
+<ol>
+<li><strong>资本开支克制</strong>：FY2025 资本开支仅 150.63 亿，CAPEX/营收比仅 12.0%，在六大中最低。公司火电机组已大量完成折旧，风光项目转入存量运营阶段。</li>
+<li><strong>折旧回血效应</strong>：火电机组大规模折旧（非现金支出）压低账面利润，但折旧费通过电价回收形成真实现金流。华电国际 FY2025 折旧约 170 亿+，是 CFO 溢出的主因。</li>
+<li><strong>投资收益稳定</strong>：对新能源参股企业的投资分红 31.5 亿（联营企业和合营企业投资收益），不消耗自身资本开支。</li>
+</ol>
+<p><strong>风险提示</strong>：</p>
+<ul>
+<li>火电占比过高（&gt;70%），碳约束长期不利</li>
+<li>ROE 低（~5%），资本效率低于大水电</li>
+<li>煤价反弹可能侵蚀经营现金流</li>
+</ul>
+<p><strong>分红</strong>：FY2025 拟每股 0.23 元（全年），分红比例 ~48.5%，按当前 A 股价约 5.2% 股息率。</p>
+<hr>
+<h3>🥈 第 2 位：大唐发电（601991.SH / 0991.HK）—— 利润弹性最大</h3>
+<p><strong>FCF: +95.27 亿元，FCF/净利润: 95.1%，FCF/营收: 7.9%</strong></p>
+<p>大唐发电 FY2025 归母净利润暴增 63.9% 至 73.86 亿，总净利润 100.23 亿。FCF 95 亿几乎等同于净利润——这是"真实赚钱"的典型样本。</p>
+<ol>
+<li><strong>煤价下行红利</strong>：大唐营业成本率从 84.0%（2024）降至 80.9%（2025），毛利率从 16.0% 跃升至 19.0%。煤价每降 10 元/吨对应利润增量约 2-3 亿元。</li>
+<li><strong>经营现金流效率最高</strong>：CFO/营收 31.2%，在六家中最高——大唐的收现能力优于华能、华电，体现其电费回收和煤耗管理优势。</li>
+<li><strong>资本开支可控</strong>：CAPEX 283 亿，CAPEX/CFO 74.8%，仍有 25% 的 CFO 转化为 FCF。</li>
+</ol>
+<p><strong>风险提示</strong>：</p>
+<ul>
+<li>杠杆率偏高（资产负债率 ~73%），利率上行敏感</li>
+<li>少数股东损益占比大（26.3 亿），归母利润中仅 73.86 亿</li>
+<li>煤价中长期不确定——2024 年煤价下行空间有限</li>
+</ul>
+<p><strong>分红</strong>：FY2025 拟分红 27.39 亿（含中期），分红比例 46.9%，A 股股息率 ~5.5%。</p>
+<hr>
+<h3>🥉 第 3 位：华能国际（600011.SH / 0902.HK）—— 规模最大，FCF 稀释</h3>
+<p><strong>FCF: +88.87 亿元，FCF/净利润: 45.6%，FCF/营收: 3.9%</strong></p>
+<p>华能国际以 2,293 亿营收、672 亿 CFO 稳居规模榜首，但 FCF 仅 89 亿——583 亿资本开支吞噬了 87% 的经营现金流。这是"大象转身"的必经之痛：</p>
+<ol>
+<li><strong>转型阵痛</strong>：新能源装机狂飙（2025 年风光新增装机 ~12GW），导致资本开支是华电国际的 3.9 倍。每 1 元风电收入约需 5-7 元前置资本开支。</li>
+<li><strong>折旧转回潜力</strong>：FY2025 折旧约 280 亿+，CFO 高出净利润 2.5 倍。一旦资本开支见顶，FCF 将大幅释放。</li>
+<li><strong>规模优势</strong>：总装机 ~135GW，国内最大。规模效应带来燃料采购、运维、融资成本的系统优势。</li>
+</ol>
+<p><strong>风险提示</strong>：</p>
+<ul>
+<li>资本开支周期性远高于华电/大唐——FCF 释放需要 3-5 年</li>
+<li>ROE 仅 ~6%，资本开支回报率尚未验证</li>
+<li>海外资产（新加坡、巴基斯坦）存在汇兑和政局风险</li>
+</ul>
+<p><strong>分红</strong>：FY2025 合计分红 62.79 亿，分红比例 53.96%，A 股股息率 ~5.8%。</p>
+<hr>
+<h3>第 4 位：中国广核（003816.SZ / 1816.HK）—— 盈利最强，FCF 最弱</h3>
+<p><strong>FCF: −40.86 亿元（负值），FCF/净利润: −27.7%，FCF/营收: −5.4%</strong></p>
+<p>这是整个排名中最大的"悖论"：中国广核拥有 44.1% 的超高毛利率（六家最高）、19.5% 的净利率和 147 亿净利润——但 FCF 却是负数。</p>
+<ol>
+<li><strong>核电机组建设黑洞</strong>：一台华龙一号造价约 200 亿元，建设期 5-6 年。FY2025 资本开支 341 亿，远超 300 亿 CFO。目前在建/核准核电机组超 10 台，CAPEX 峰值尚未到来。</li>
+<li><strong>长期价值逻辑</strong>：每台核电机组建成后贡献 15-20 亿/年的稳定 CFO，寿命 60 年。当前 FCF 为负是成长期代价——类比 2010-2015 年长江电力的资本开支周期。</li>
+<li><strong>折旧远超 CAPEX</strong>：FY2025 折旧 ~110 亿，其中 70% 是老机组折旧（非现金）。这是为何净利润能持续增长而 FCF 为负——老机组赚的钱全部投入新机组。</li>
+</ol>
+<p><strong>风险提示</strong>：</p>
+<ul>
+<li>FCF 为负将持续至 2030 年+，这意味着短期内不具备分红增长和还债的双重能力</li>
+<li>核电安全风险——一次事故可能毁掉整个估值框架</li>
+<li>电力市场改革下的电价风险</li>
+</ul>
+<p><strong>分红</strong>：FY2025 每股分红 ~0.098 元，A 股股息率 ~2.2%。</p>
+<hr>
+<h3>第 5 位：龙源电力（001289.SZ / 0916.HK）—— 赛道领先，但自噬现金流</h3>
+<p><strong>FCF: −20.76 亿元，FCF/净利润: −37.8%，FCF/营收: −6.9%</strong></p>
+<p>龙源电力是全球最大风电运营商（装机超 32GW），毛利率 35% 代表了新能源资产的优质盈利能力。但 239 亿资本开支远超 218 亿 CFO——风电的规模扩张仍在"吃掉"自身现金流。</p>
+<ol>
+<li><strong>风电抢装逻辑</strong>：2025 年是新能源上网电价改革过渡年，大量项目抢在年底前并网，推高资本开支。</li>
+<li><strong>现金流结构改善中</strong>：CFO 218 亿 vs 净利润 55 亿——CFO 是净利润的 4 倍（折旧 160 亿+）。一旦 CAPEX 回落，FCF 拐点异常剧烈。</li>
+<li><strong>补贴回收</strong>：应收账款中仍有 ~300 亿+可再生能源补贴待回收，回收后直接增厚 CFO。</li>
+</ol>
+<p><strong>风险提示</strong>：</p>
+<ul>
+<li>补贴依赖度高，补贴回收节奏不确定</li>
+<li>风电弃风率边际上升（三北地区送出通道瓶颈）</li>
+<li>市场化电价下行压力（136 号文深远影响）</li>
+</ul>
+<p><strong>分红</strong>：FY2025 拟分红，A 股股息率 ~3.0%。</p>
+<hr>
+<h3>第 6 位：新天绿能（600956.SH / 0956.HK）—— 体量最小，FCF 最具压力</h3>
+<p><strong>FCF: −19.76 亿元，FCF/净利润: −98.1%，FCF/营收: −10.0%</strong></p>
+<p>新天绿能主营天然气管道 + 风电，营收 198 亿在六家中最小。FCF −20 亿几乎吃掉全年全部净利润——经营赚的钱全部且不够覆盖资本开支。</p>
+<ol>
+<li><strong>天然气管道资本密集</strong>：管输业务属于重资产投入，回报周期 10-15 年。资本开支 92.73 亿中管道业务占比约 40%。</li>
+<li><strong>风电加速</strong>：河北、新疆风电项目同时推进，2025 年新增装机加速。</li>
+<li><strong>盈利质量可接受</strong>：毛利率 20.8%、净利率 10.2%，在不考虑 FCF 的前提下尚可。但 FCF 持续为负说明盈利未能自我造血。</li>
+</ol>
+<p><strong>风险提示</strong>：</p>
+<ul>
+<li>双重重资产（管道 + 风电）的资本开支双重压力</li>
+<li>天然气价格波动冲击管输毛利</li>
+<li>体量小（198 亿营收）抗周期能力弱</li>
+</ul>
+<p><strong>分红</strong>：FY2025 拟分红，A 股股息率 ~3.5%。</p>
+<hr>
+<h2>五、FCF 质量因子深度分析</h2>
+<h3>5.1 资本开支强度（CAPEX / CFO）</h3>
+<pre class="notranslate"><code class="notranslate">公司         CAPEX/CFO    定性
+────────────────────────────────
+华电国际       55.3%     🟢 轻资本，现金留存多
+大唐发电       74.8%     🟢 可控
+华能国际       86.8%     🟡 偏高，转型期
+龙源电力      109.5%     🔴 不可持续，吃老本
+中国广核      113.6%     🔴 建设高峰期
+新天绿能      127.1%     🔴 严重吃老本
+</code></pre>
+<p><strong>投资启示</strong>：CAPEX/CFO &lt; 80% 的公司（华电、大唐）具有真实的 FCF 生成能力。&gt;100% 的公司本质上是"增长依赖型"——需要持续股权/债务融资来填补缺口。</p>
+<h3>5.2 折旧覆盖率（CFO / 净利润）</h3>
+<p>即每 1 元净利润背后有多少真实现金：</p>
+<pre class="notranslate"><code class="notranslate">公司         CFO/净利    折旧效应
+────────────────────────────────
+龙源电力      4.0x      风电折旧极大
+华能国际      3.4x      火电+风电折旧
+华电国际      3.3x      火电折旧回收
+大唐发电      3.8x      类似华电
+中国广核      2.0x      核电折旧适中
+新天绿能      3.6x      管输+风电折旧
+</code></pre>
+<p>全部 6 家 CFO/净利 &gt; 1，说明电力行业的天然现金流优势——折旧是真实回收。但仅有华电和大唐能将这个优势转化为 FCF。</p>
+<h3>5.3 FCF 绝对量的分层</h3>
+<pre class="notranslate"><code class="notranslate">层级                FCF 范围      判断
+────────────────────────────────────────────
+第一梯队（现金奶牛）   &gt;100 亿       华电国际、大唐发电
+第二梯队（转型中）    50-100 亿      华能国际
+第三梯队（烧钱期）    &lt;0             龙源电力、中国广核、新天绿能
+</code></pre>
+<hr>
+<h2>六、综合投资判断</h2>
+<h3>6.1 FCF 质量 × 股息率矩阵</h3>
+<pre class="notranslate"><code class="notranslate">                高股息率 (&gt;5%)              中股息率 (3-5%)           低股息率 (&lt;3%)
+高FCF质量    🟢 华电国际 (5.2%)                              🟡
+             🟢 大唐发电 (5.5%)
+             🟡 华能国际 (5.8%)  ← FCF偏低但分红慷慨
+
+中FCF质量                                         
+                                                 龙源电力 (3.0%)
+低FCF质量                                          新天绿能 (3.5%)     🔴 中国广核 (2.2%)
+</code></pre>
+<h3>6.2 投资排序</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="left">优先度</th>
+<th align="left">公司</th>
+<th align="left">理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">⭐ <strong>第一优先</strong></td>
+<td align="left"><strong>大唐发电</strong></td>
+<td align="left">FCF 质量 95% × 利润增速 64% × 股息率 5.5%——三重共振</td>
+</tr>
+<tr>
+<td align="left">⭐ <strong>第一优先</strong></td>
+<td align="left"><strong>华电国际</strong></td>
+<td align="left">FCF 质量 148% × 低 CAPEX × 股息率 5.2%——纯现金奶牛</td>
+</tr>
+<tr>
+<td align="left">⭐⭐ 第二优先</td>
+<td align="left">华能国际</td>
+<td align="left">规模最大 × FCF 即将拐点（CAPEX 见顶后） × 股息率 5.8%</td>
+</tr>
+<tr>
+<td align="left">⭐⭐⭐ 成长期权</td>
+<td align="left">中国广核</td>
+<td align="left">负 FCF 是核电建设期代价——10 年后 FCF 将爆发，适合长期主义</td>
+</tr>
+<tr>
+<td align="left"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> 等待拐点</td>
+<td align="left">龙源电力</td>
+<td align="left">待 CAPEX 回落 + 补贴回收 → FCF 拐点，当前不建议</td>
+</tr>
+<tr>
+<td align="left"><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> 回避</td>
+<td align="left">新天绿能</td>
+<td align="left">FCF −20 亿且体量太小，双重重资产无解</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>七、关键发现</h2>
+<ol>
+<li><strong>利润 ≠ 现金</strong>：中国广核 147 亿净利润但 FCF −41 亿——纯粹的"账面利润"。</li>
+<li><strong>规模 ≠ 质量</strong>：华能国际 2,293 亿营收（六家最大）但 FCF 仅排第三。</li>
+<li><strong>折旧是电力行业的隐藏红利</strong>：6 家中 5 家 CFO/净利 &gt; 3x。能用好折旧金的（华电、大唐）才是赢家。</li>
+<li><strong>资本开支是 FCF 的开关</strong>：CAPEX/CFO &lt; 80% 是 FCF 为正的必要条件——华电（55%）和大唐（75%）是仅有两家达标的。</li>
+<li><strong>分红真实性的试金石</strong>：大唐和华电的高分红（~5.5%）由 FCF 支撑而非借款——这是"真分红"。华能国际 5.8% 的股息率背后 FCF 覆盖率不足（FCF 89 亿 vs 分红 63 亿勉强够）。</li>
+</ol>
+<hr>
+<blockquote>
+<p><strong>数据来源</strong>：各公司 2025 年年报（Sina Finance: <a href="https://vip.stock.finance.sina.com.cn%EF%BC%89%EF%BC%8C%E5%88%86%E7%BA%A2%E6%95%B0%E6%8D%AE%E5%BC%95%E8%87%AA%E5%85%AC%E5%BC%80%E6%8A%AB%E9%9C%B2%E5%85%AC%E5%91%8A" rel="nofollow">https://vip.stock.finance.sina.com.cn），分红数据引自公开披露公告</a><br>
+<strong>风险提示</strong>：本报告基于公开财务数据，FCF 为简化计算（CFO − 购建固定资产现金），不完全等同企业自由现金流（FCFF）。电力行业受政策、煤价、利率多重因素影响，投资需独立判断。不构成投资建议。</p>
+</blockquote></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://aiwangfeng.github.io">Just do it!</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("3/25/2024"!=""){
+    var startSite=new Date("3/25/2024");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","aiwangfeng/aiwangfeng.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>

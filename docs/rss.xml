@@ -1,5 +1,32 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Just do it!</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>Just do it!</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Fri, 15 May 2026 02:55:50 +0000</lastBuildDate><managingEditor>Just do it!</managingEditor><ttl>60</ttl><webMaster>Just do it!</webMaster><item><title>中芯国际2026Q1季报分析</title><link>https://aiwangfeng.github.io/post/zhong-xin-guo-ji-2026Q1-ji-bao-fen-xi.html</link><description># 中芯国际 2026年一季报深度分析
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Just do it!</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>Just do it!</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Tue, 26 May 2026 02:45:19 +0000</lastBuildDate><managingEditor>Just do it!</managingEditor><ttl>60</ttl><webMaster>Just do it!</webMaster><item><title>发电企业FCF分析</title><link>https://aiwangfeng.github.io/post/fa-dian-qi-ye-FCF-fen-xi.html</link><description># A+H 股发电企业自由现金流质量排名
+
+&gt; 数据来源：各公司 2025 年年报（Sina Finance 现金流量表/利润表，截至 2026-04 披露）
+&gt; FCF 定义：经营活动现金流量净额 − 购建固定资产、无形资产和其他长期资产支付的现金
+&gt; 注意：A+H 股严格限定为两地双重上市的发电企业，不含单市场上市或非发电主业公司
+&gt; Author: jadeking (玉帝) | Date: 2026-05-26
+
+---
+
+## 一、范围界定
+
+**A+H 股发电企业**（截至 2026 年 5 月，纯发电/电力运营商，剔除煤矿、设备制造）：
+
+| # | 公司 | A 股代码 | H 股代码 | 主业类型 |
+|:--|:-----|:--------|:--------|:---------|
+| 1 | 华能国际 | 600011.SH | 0902.HK | 火电 + 风光 |
+| 2 | 华电国际 | 600027.SH | 1071.HK | 火电 + 风光 |
+| 3 | 大唐发电 | 601991.SH | 0991.HK | 火电 + 风光 |
+| 4 | 中国广核 | 003816.SZ | 1816.HK | 核电 |
+| 5 | 龙源电力 | 001289.SZ | 0916.HK | 风电 + 光伏 |
+| 6 | 新天绿能 | 600956.SH | 0956.HK | 天然气 + 风电 |
+
+**未纳入的原因**：
+- 中国神华（601088/1088）→ 煤矿开采为主，发电为辅
+- 东方电气（600875/1072）、上海电气（601727/2727）→ 设备制造
+- 国电电力（600795）、长江电力（600900）、中国核电（601985）、华润电力（0836）、中国电力（2380）→ 仅单地上市，非 A+H
+
+&gt; **结论：A+H 发电企业仅有 6 家，已全覆盖。</description><guid isPermaLink="true">https://aiwangfeng.github.io/post/fa-dian-qi-ye-FCF-fen-xi.html</guid><pubDate>Tue, 26 May 2026 02:44:58 +0000</pubDate></item><item><title>中芯国际2026Q1季报分析</title><link>https://aiwangfeng.github.io/post/zhong-xin-guo-ji-2026Q1-ji-bao-fen-xi.html</link><description># 中芯国际 2026年一季报深度分析
 
 **报告日期**：2026-05-14（财报发布当日）  
 **报告性质**：及时分析  
