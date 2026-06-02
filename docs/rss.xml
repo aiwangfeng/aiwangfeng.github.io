@@ -1,5 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Just do it!</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>Just do it!</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Tue, 26 May 2026 02:45:19 +0000</lastBuildDate><managingEditor>Just do it!</managingEditor><ttl>60</ttl><webMaster>Just do it!</webMaster><item><title>发电企业FCF分析</title><link>https://aiwangfeng.github.io/post/fa-dian-qi-ye-FCF-fen-xi.html</link><description># A+H 股发电企业自由现金流质量排名
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Just do it!</title><link>https://aiwangfeng.github.io</link><description>The two most important days in your life are the day you are born and the day you find out why.</description><copyright>Just do it!</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/aiwangfeng/aiwangfeng.github.io/main/zhuque.svg</url><title>avatar</title><link>https://aiwangfeng.github.io</link></image><lastBuildDate>Tue, 02 Jun 2026 02:48:00 +0000</lastBuildDate><managingEditor>Just do it!</managingEditor><ttl>60</ttl><webMaster>Just do it!</webMaster><item><title>前瞻布局和发展未来产业</title><link>https://aiwangfeng.github.io/post/qian-zhan-bu-ju-he-fa-zhan-wei-lai-chan-ye.html</link><description># 习近平《前瞻布局和发展未来产业》要点分析
+
+**来源**：《求是》2026年第11期（2026年5月31日发布）  
+**原文背景**：2026年1月30日，二十届中央政治局第二十四次集体学习时的讲话  
+**定性**：最高层关于未来产业的系统性战略部署
+
+---
+
+## 一、总体判断
+
+文章将**未来产业**提升到'推进强国建设、民族复兴伟业'的战略高度，核心逻辑链：
+
+&gt; 新一轮科技革命 → 未来产业崛起 → 抢占制高点、把握发展主动权 → 新质生产力 → 现代化产业体系
+
+自我评估基调：**自信但清醒**——'整体竞争力跻身全球第一梯队，越来越多领域实现'并跑'乃至'领跑''，同时承认'短板弱项也不少'。</description><guid isPermaLink="true">https://aiwangfeng.github.io/post/qian-zhan-bu-ju-he-fa-zhan-wei-lai-chan-ye.html</guid><pubDate>Tue, 02 Jun 2026 02:47:41 +0000</pubDate></item><item><title>发电企业FCF分析</title><link>https://aiwangfeng.github.io/post/fa-dian-qi-ye-FCF-fen-xi.html</link><description># A+H 股发电企业自由现金流质量排名
 
 &gt; 数据来源：各公司 2025 年年报（Sina Finance 现金流量表/利润表，截至 2026-04 披露）
 &gt; FCF 定义：经营活动现金流量净额 − 购建固定资产、无形资产和其他长期资产支付的现金
